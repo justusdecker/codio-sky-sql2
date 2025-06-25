@@ -1,0 +1,1 @@
+SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY FROM flights JOIN airlines ON flights.airline = airlines.id WHERE flights.DAY = :DAY AND flights.MONTH = :MONTH AND flights.YEAR = :YEAR
