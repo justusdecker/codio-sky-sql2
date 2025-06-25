@@ -1,7 +1,8 @@
 import flights_data
 from datetime import datetime
 import sqlalchemy
-
+import csv
+from tkinter.filedialog import asksaveasfilename
 IATA_LENGTH = 3
 
 def delayed_flights_by_airline():
@@ -29,7 +30,7 @@ def delayed_flights_by_airport():
             valid = True
     results = flights_data.get_delayed_flights_by_airport(airport_input)
     print_results(results)
-
+    
 
 def flight_by_id():
     """
@@ -95,6 +96,26 @@ def print_results(results):
             print(f"{result['ID']}. {origin} -> {dest} by {airline}, Delay: {delay} Minutes")
         else:
             print(f"{result['ID']}. {origin} -> {dest} by {airline}")
+            
+    
+
+    
+    inp = ''
+    while inp != 'y' and inp != 'n':
+        inp = input('Would you like to export this data to a CSV file? (y/n)')
+    if inp == 'y':
+        
+        filepath = asksaveasfilename(filetypes=[['CSV','*.csv']])
+        if not filepath:
+            print('No filepath set!')
+            return
+        with open(filepath, 'w', newline='') as csvfile:
+            csvwriter = csv.writer(csvfile)
+            for result in results:
+                # turn result into dictionary
+                result = result._mapping
+                row = [result['ID'],int(result['DELAY']) if result['DELAY'] else 0,result['ORIGIN_AIRPORT'],result['DESTINATION_AIRPORT'],result['AIRLINE']]
+                csvwriter.writerow(row)
 
 
 def show_menu_and_get_input():
