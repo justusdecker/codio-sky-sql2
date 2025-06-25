@@ -8,8 +8,9 @@ QUERY_FLIGHT_BY_ID = loadsql('flight_by_id')
 
 QUERY_FLIGHT_BY_DATE = loadsql('flight_by_date')
 
-QUERY_DELAYED_FLIGHTS_BY_AIRPORT = "SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY FROM flights JOIN airlines ON flights.airline = airlines.id WHERE flights.DEPARTURE_DELAY > 20 AND flights.ORIGIN_AIRPORT = :AIRPORT"
+QUERY_DELAYED_FLIGHTS_BY_AIRPORT = loadsql('delayed_flights_by_airport')
 
+QUERY_DELAYED_FLIGHTS_BY_AIRLINE = loadsql('delayed_flights_by_airline')
 # Define the database URL
 DATABASE_URL = "sqlite:///data/flights.sqlite3"
 
@@ -40,9 +41,18 @@ def execute_query(query, params):
     except Exception as e:
         print("Query error:", e)
         return []
+
+def get_delayed_flights_by_airline(airline: str):
+    """
+    Searches for delayed flight details using the airline.
+    If the flight was found, returns a list with a single record.
+    """
+    params = {'AIRLINE': airline}
+    return execute_query(QUERY_DELAYED_FLIGHTS_BY_AIRLINE, params)
+
 def get_delayed_flights_by_airport(airport: str):
     """
-    Searches for flight details using flight ID.
+    Searches for delayed flight details using the airport.
     If the flight was found, returns a list with a single record.
     """
     params = {'AIRPORT': airport}
@@ -50,7 +60,7 @@ def get_delayed_flights_by_airport(airport: str):
 
 def get_flights_by_date(day: int, month: int, year: int):
     """
-    Searches for flight details using flight ID.
+    Searches for flight details using flight Date.
     If the flight was found, returns a list with a single record.
     """
     params = {'DAY': day,'MONTH': month,'YEAR': year}
