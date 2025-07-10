@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, text
 
 def loadsql(filename: str) -> str:
-    with open(f'sql\\{filename}.sql') as f:
+    with open(f'sql/{filename}.sql') as f:
         return f.read()
 
 QUERY_FLIGHT_BY_ID = loadsql('flight_by_id')
